@@ -1,0 +1,5 @@
+{
+  "name": "HR Nexus",
+  "description": "A comprehensive Human Resource Management System featuring employee records, timekeeping, leave management, and payroll processing based on structured organizational data.",
+  "requestFramePermissions": []
+}
