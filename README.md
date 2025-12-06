@@ -1,18 +1,51 @@
 
 
-# Run and deploy your AI Studio app
+✅ 1. Chuẩn bị
 
-This contains everything you need to run your app locally.
+Yêu cầu duy nhất:
 
-View your app in AI Studio: https://ai.studio/apps/drive/1M6dPlgW9ejNugfV2PWdUM8wDHWZ6X0Xv
+Máy có cài Docker Desktop (Windows/Mac) hoặc Docker Engine (Linux)
 
-## Run Locally
+✅ 2. File Docker cần có
 
-**Prerequisites:**  Node.js
+Trong thư mục gốc của dự án HR Nexus cần có Dockerfile với nội dung sau:
+
+# 1. Build ứng dụng
+FROM node:18 AS build
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm install
+
+COPY . .
+RUN npm run build
+
+# 2. Serve bản build bằng Nginx
+FROM nginx:alpine
+COPY --from=build /app/dist /usr/share/nginx/html
+
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
+
+✅ 3. Build Docker image
+
+Mở terminal trong thư mục dự án (nơi có Dockerfile), chạy lệnh:
+
+docker build -t hr-nexus .
 
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+Giải thích: Lệnh này đóng gói ứng dụng thành một image tên hr-nexus.
+
+✅ 4. Chạy ứng dụng trong Docker
+
+Sau khi build thành công, chạy container:
+
+docker run -p 8080:80 hr-nexus
+
+✅ 5. Truy cập ứng dụng
+
+Mở trình duyệt và truy cập:
+
+👉 http://localhost:8080
+
+Ứng dụng HR Nexus sẽ xuất hiện và hoạt động bình thường.
